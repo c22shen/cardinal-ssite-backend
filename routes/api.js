@@ -12,14 +12,21 @@ const firestore = new Firestore({
 var test = [{test: "something else"}]
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  const document = firestore.doc('api/login');
-  document.set({
-    url: 'login',
-    state: 'failure'
-  }).then(() => {
-    res.json(test);
-    // next();
+  const document = firestore.doc('states/login');
+  document.get().then(doc => {
+    console.log(JSON.stringify(doc.data()));
+    if (doc.data().state === "success") {
+      const document = firestore.doc('apis/login-success');
+      document.get().then(doc => {
+        
+        res.json(doc.data());
+        // next();
+      });
+    }
   });
+
+
+
 
   
 });
